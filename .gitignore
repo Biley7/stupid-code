@@ -13,6 +13,7 @@ __pycache__/
 .hypothesis/
 *.db-wal
 *.db-shm
+data/*.db
 
 # Node / Frontend
 ui/node_modules/

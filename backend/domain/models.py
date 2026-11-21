@@ -6,6 +6,7 @@ or ``True`` are never coerced into integers.
 """
 
 import re
+import warnings
 from enum import StrEnum
 from typing import Annotated, Literal
 
@@ -210,3 +211,283 @@ class RepoGraphSnapshot(BaseModel):
     vital_organs: list[StrictStr]
     cycles: list[list[StrictStr]]
     dsa_signals: list[DSASignal]
+
+
+# --- Spec #02: provenance, topology, and pedagogy models (leaf models) ---
+
+_SpecSource = Literal["requirements.md", "design.md", "tasks.md"]
+_DriftType = Literal["UNSPECIFIED_CODE", "UNIMPLEMENTED_SPEC"]
+_TopologyPattern = Literal[
+    "Hexagonal / Clean Architecture",
+    "Layered MVC",
+    "Feature-Sliced",
+    "Modular Monolith",
+    "Flat / Script",
+]
+_DirectoryRole = Literal[
+    "domain",
+    "engines",
+    "api",
+    "ui",
+    "tests",
+    "config",
+    "infrastructure",
+    "services",
+    "entry_points",
+    "other",
+]
+
+
+def _check_stripped_length(value: str, field: str, maximum: int) -> None:
+    if not 1 <= len(value.strip()) <= maximum:
+        raise ValueError(f"{field} must have 1 to {maximum} characters after stripping")
+
+
+def _check_line_range(start: int, end: int, start_field: str, end_field: str) -> None:
+    if start < 1:
+        raise ValueError(f"{start_field} must be at least 1")
+    if end < 1:
+        raise ValueError(f"{end_field} must be at least 1")
+    if end < start:
+        raise ValueError(f"{end_field} must not be below {start_field}")
+
+
+class PedagogyLens(StrEnum):
+    L1_SYNTAX = "L1_SYNTAX"
+    L2_FLOW = "L2_FLOW"
+    L3_ARCHITECTURE = "L3_ARCHITECTURE"
+
+
+class SpecLink(BaseModel):
+    model_config = _CONFIG
+
+    spec_name: StrictStr
+    source_file: _SpecSource
+    section_title: StrictStr
+    excerpt: Annotated[StrictStr, Field(min_length=1, max_length=300)]
+    confidence: UnitFloat
+
+
+class SpecDriftItem(BaseModel):
+    model_config = _CONFIG
+
+    drift_type: _DriftType
+    target: StrictStr
+    details: StrictStr
+
+    @model_validator(mode="after")
+    def _check_drift(self) -> "SpecDriftItem":
+        if not self.details.strip():
+            raise ValueError("details must not be blank")
+        return self
+
+
+# The field name "construct" is mandated by the schema, but it shadows the
+# deprecated BaseModel.construct classmethod, so Pydantic warns at class
+# creation. Suppress only that one warning, only for this class definition.
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", message='Field name "construct"', category=UserWarning)
+
+    class SyntaxAnnotation(BaseModel):
+        model_config = _CONFIG
+
+        line_start: StrictInt
+        line_end: StrictInt
+        construct: StrictStr
+        explanation: StrictStr
+        what_if_removed: StrictStr
+
+        @model_validator(mode="after")
+        def _check_annotation(self) -> "SyntaxAnnotation":
+            _check_line_range(self.line_start, self.line_end, "line_start", "line_end")
+            _check_stripped_length(self.construct, "construct", 2000)
+            _check_stripped_length(self.explanation, "explanation", 2000)
+            _check_stripped_length(self.what_if_removed, "what_if_removed", 2000)
+            return self
+
+
+class FlowStep(BaseModel):
+    model_config = _CONFIG
+
+    step_number: StrictInt
+    location: StrictStr
+    action: StrictStr
+    data_transformation: StrictStr
+
+    @model_validator(mode="after")
+    def _check_step(self) -> "FlowStep":
+        if self.step_number < 1:
+            raise ValueError("step_number must be at least 1")
+        _check_stripped_length(self.location, "location", 1000)
+        _check_stripped_length(self.action, "action", 1000)
+        _check_stripped_length(self.data_transformation, "data_transformation", 1000)
+        return self
+
+
+class DSACard(BaseModel):
+    model_config = _CONFIG
+
+    chapter: DSAChapter
+    pattern_name: StrictStr
+    start_line: StrictInt
+    end_line: StrictInt
+    why_used_here: StrictStr
+    time_complexity: StrictStr
+    space_complexity: StrictStr
+
+    @model_validator(mode="after")
+    def _check_card(self) -> "DSACard":
+        _check_line_range(self.start_line, self.end_line, "start_line", "end_line")
+        return self
+
+
+class AlternativeArchitecture(BaseModel):
+    model_config = _CONFIG
+
+    pattern_name: _TopologyPattern
+    why_not_chosen: StrictStr
+    when_to_switch: StrictStr
+
+    @model_validator(mode="after")
+    def _check_alternative(self) -> "AlternativeArchitecture":
+        _check_stripped_length(self.why_not_chosen, "why_not_chosen", 1000)
+        _check_stripped_length(self.when_to_switch, "when_to_switch", 1000)
+        return self
+
+
+# --- Spec #02: provenance, topology, and pedagogy models (composite models) ---
+
+_BOUNDARY_METRIC_KEYS = frozenset(
+    {"max_depth", "cross_folder_import_ratio", "domain_isolation_score", "entry_point_count"}
+)
+_BOUNDARY_UNIT_KEYS = ("cross_folder_import_ratio", "domain_isolation_score")
+
+_MetricFloat = Annotated[
+    float,
+    BeforeValidator(_reject_bool),
+    Field(strict=True, allow_inf_nan=False),
+]
+
+
+class ProvenanceReport(BaseModel):
+    model_config = _CONFIG
+
+    repo_id: StrictStr
+    has_kiro_specs: StrictBool
+    spec_links: dict[RelativePath, list[SpecLink]]
+    drift_items: list[SpecDriftItem]
+    recent_commits: dict[RelativePath, list[StrictStr]]
+
+
+class TopologyProfile(BaseModel):
+    model_config = _CONFIG
+
+    repo_id: StrictStr
+    detected_pattern: _TopologyPattern
+    confidence: UnitFloat
+    directory_roles: dict[RelativePath, _DirectoryRole]
+    boundary_metrics: dict[StrictStr, _MetricFloat]
+    evidence: list[StrictStr]
+
+    @model_validator(mode="after")
+    def _check_profile(self) -> "TopologyProfile":
+        if not self.repo_id.strip():
+            raise ValueError("repo_id must not be blank")
+        if set(self.boundary_metrics) != _BOUNDARY_METRIC_KEYS:
+            raise ValueError(
+                "boundary_metrics keys must be exactly " + ", ".join(sorted(_BOUNDARY_METRIC_KEYS))
+            )
+        for key, value in self.boundary_metrics.items():
+            if value < 0.0:
+                raise ValueError(f"boundary_metrics[{key!r}] must be at least 0.0")
+        for key in _BOUNDARY_UNIT_KEYS:
+            if self.boundary_metrics[key] > 1.0:
+                raise ValueError(f"boundary_metrics[{key!r}] must be at most 1.0")
+        return self
+
+
+class L1SyntaxExplanation(BaseModel):
+    model_config = _CONFIG
+
+    target_id: StrictStr
+    language: Language
+    summary: StrictStr
+    annotations: list[SyntaxAnnotation]
+    key_takeaway: StrictStr
+
+    @model_validator(mode="after")
+    def _check_l1(self) -> "L1SyntaxExplanation":
+        _check_stripped_length(self.summary, "summary", 2000)
+        _check_stripped_length(self.key_takeaway, "key_takeaway", 2000)
+        return self
+
+
+class L2FlowExplanation(BaseModel):
+    model_config = _CONFIG
+
+    target_id: StrictStr
+    execution_steps: list[FlowStep]
+    upstream_callers: list[StrictStr]
+    downstream_callees: list[StrictStr]
+    side_effects: list[StrictStr]
+    dsa_cards: list[DSACard]
+    llm_content_available: StrictBool = True
+
+
+class L3ArchitectureExplanation(BaseModel):
+    model_config = _CONFIG
+
+    target_id: StrictStr
+    topology_pattern: _TopologyPattern
+    why_this_folder_structure: StrictStr
+    structural_evidence: list[StrictStr]
+    alternatives: list[AlternativeArchitecture]
+    spec_rationale: StrictStr | None = None
+
+    @model_validator(mode="after")
+    def _check_l3(self) -> "L3ArchitectureExplanation":
+        if not 1 <= len(self.structural_evidence) <= 20:
+            raise ValueError("structural_evidence must have 1 to 20 entries")
+        return self
+
+
+class ExplanationEnvelope(BaseModel):
+    model_config = _CONFIG
+
+    repo_id: StrictStr
+    target_id: StrictStr
+    ast_hash: StrictStr
+    lens: PedagogyLens
+    cached: StrictBool
+    l1: L1SyntaxExplanation | None = None
+    l2: L2FlowExplanation | None = None
+    l3: L3ArchitectureExplanation | None = None
+
+    @model_validator(mode="after")
+    def _check_envelope(self) -> "ExplanationEnvelope":
+        tiers = {
+            PedagogyLens.L1_SYNTAX: self.l1,
+            PedagogyLens.L2_FLOW: self.l2,
+            PedagogyLens.L3_ARCHITECTURE: self.l3,
+        }
+        populated = {lens for lens, tier in tiers.items() if tier is not None}
+        if populated != {self.lens}:
+            raise ValueError("exactly the tier matching lens must be set")
+        return self
+
+
+__all__ += [
+    "AlternativeArchitecture",
+    "DSACard",
+    "ExplanationEnvelope",
+    "FlowStep",
+    "L1SyntaxExplanation",
+    "L2FlowExplanation",
+    "L3ArchitectureExplanation",
+    "PedagogyLens",
+    "ProvenanceReport",
+    "SpecDriftItem",
+    "SpecLink",
+    "SyntaxAnnotation",
+    "TopologyProfile",
+]

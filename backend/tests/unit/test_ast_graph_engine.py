@@ -6691,7 +6691,12 @@ def test_pytest_ini_has_only_testpaths_and_pythonpath() -> None:
     parser = configparser.ConfigParser()
     parser.read(_REPO_ROOT / "pytest.ini", encoding="utf-8")
     assert parser.sections() == ["pytest"]
-    assert dict(parser["pytest"]) == {"testpaths": "backend/tests", "pythonpath": "."}
+    # Spec #02 requirement 17.1 added asyncio_mode.
+    assert dict(parser["pytest"]) == {
+        "testpaths": "backend/tests",
+        "pythonpath": ".",
+        "asyncio_mode": "auto",
+    }
 
 
 def test_test_files_live_under_configured_testpaths() -> None:
