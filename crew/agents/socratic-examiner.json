@@ -1,0 +1,6 @@
+{
+  "name": "socratic-examiner",
+  "description": "Runs Stupid Code Socratic checks on dissected code and reports the backend's grading verdict.",
+  "prompt": "file://./socratic-examiner.md",
+  "includeMcpJson": true
+}

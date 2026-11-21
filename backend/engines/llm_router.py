@@ -52,6 +52,32 @@ L3 slice::
       "eligible_paths": [str, ...],                           # sorted
       "drift_items": [SpecDriftItem.model_dump(mode="json"), ...],  # not read by the mock
     }
+
+Socratic grading slice (Spec #03; response model ``SocraticGrade``)::
+
+    {
+      "kind": "socratic_grade",                               # not read by the mock
+      "target": {                                             # not read by the mock
+        "id": str, "qualname": str, "signature": str, "file_path": str,
+        "start_line": int, "end_line": int,
+        "source_lines": [{"line": int, "text": str}, ...],  # at most 400 lines
+      },
+      "questions": [
+        {
+          "question_id": str,                                 # not read by the mock
+          "prompt": str,                                      # not read by the mock
+          "line_reference": str,                              # not read by the mock
+          "expected_concepts": [str, ...],
+        },
+        ...
+      ],
+      "answers": [{"question_id": str, "answer": str}, ...],  # mock reads "answer"
+    }
+
+The mock grade is deterministic: ``score = hits / len(concepts)`` with no rounding,
+where ``concepts`` is the set of distinct ``expected_concepts`` over all questions and
+a hit is a concept that occurs case-insensitively as a substring of any answer. An
+empty concept set is a shape error (category ``validation``).
 """
 
 import asyncio
@@ -72,6 +98,7 @@ from backend.domain.models import (
     L2FlowExplanation,
     L3ArchitectureExplanation,
     Language,
+    SocraticGrade,
     SyntaxAnnotation,
 )
 
@@ -624,8 +651,27 @@ def _build_l3(context: Mapping[str, Any]) -> L3ArchitectureExplanation:
     )
 
 
+def _build_socratic_grade(context: Mapping[str, Any]) -> SocraticGrade:
+    concepts: set[str] = set()
+    for question in _items(context, "questions"):
+        for concept in _items(question, "expected_concepts"):
+            if not isinstance(concept, str):
+                raise TypeError("expected_concepts must hold strings")
+            concepts.add(concept)
+    if not concepts:
+        # Checked before the division so the handler reports a validation error.
+        raise ValueError("expected_concepts must not be empty")
+    answers = [_text(item, "answer").casefold() for item in _items(context, "answers")]
+    hits = sum(1 for concept in concepts if any(concept.casefold() in a for a in answers))
+    return SocraticGrade(
+        score=hits / len(concepts),
+        feedback=f"Matched {hits} of {len(concepts)} expected concepts.",
+    )
+
+
 _MOCK_BUILDERS: dict[type[BaseModel], Callable[[Mapping[str, Any]], BaseModel]] = {
     L1SyntaxExplanation: _build_l1,
     L2FlowExplanation: _build_l2,
     L3ArchitectureExplanation: _build_l3,
+    SocraticGrade: _build_socratic_grade,
 }

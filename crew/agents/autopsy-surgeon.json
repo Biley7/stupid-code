@@ -1,0 +1,6 @@
+{
+  "name": "autopsy-surgeon",
+  "description": "Dissects code with the Stupid Code MCP tools and explains it with grounded evidence and blast radius.",
+  "prompt": "file://./autopsy-surgeon.md",
+  "includeMcpJson": true
+}

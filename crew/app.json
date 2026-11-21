@@ -1,0 +1,62 @@
+{
+  "name": "stupid-code",
+  "version": "0.1.0",
+  "displayName": "Stupid Code",
+  "description": "Code Autopsy for Crew: dissect files and folders with grounded explanations and blast radius, and toggle Study Mode mastery checks.",
+  "author": "Stupid Code",
+  "agents": [
+    "agents/autopsy-surgeon.json",
+    "agents/socratic-examiner.json"
+  ],
+  "skills": [
+    "skills/code-autopsy"
+  ],
+  "permissions": {
+    "api": [
+      "/api/apps/stupid-code/crew"
+    ]
+  },
+  "contributes": {
+    "fileMenuItems": [
+      {
+        "id": "autopsy-file",
+        "label": "Autopsy File",
+        "icon": "Microscope",
+        "endpoint": "/api/apps/stupid-code/crew",
+        "surfaces": [
+          "tree-context",
+          "file-overflow"
+        ],
+        "when": {
+          "extensions": [
+            "py",
+            "ts",
+            "tsx",
+            "js",
+            "java"
+          ],
+          "kinds": [
+            "file"
+          ]
+        }
+      },
+      {
+        "id": "explain-folder-architecture",
+        "label": "Explain Folder Architecture",
+        "icon": "FolderTree",
+        "endpoint": "/api/apps/stupid-code/crew",
+        "surfaces": [
+          "folder-row"
+        ]
+      }
+    ],
+    "sessionControls": [
+      {
+        "id": "study-mode",
+        "entryPoint": "ui/study-mode-control.mjs",
+        "label": "Study Mode",
+        "icon": "GraduationCap"
+      }
+    ]
+  }
+}

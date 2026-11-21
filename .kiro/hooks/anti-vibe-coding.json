@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Anti-vibe-coding comprehension check",
+      "trigger": "PostToolUse",
+      "matcher": "^(fs_write|fs_append|str_replace|smart_relocate|semantic_rename)$",
+      "action": {
+        "type": "agent",
+        "prompt": "Anti-vibe-coding comprehension check. Follow these steps exactly. Step 1: call the Stupid Code MCP tool get_comprehension_vitals with repo_path set to the workspace repository root, and read the study_mode_enabled field of its result. Step 2: if get_comprehension_vitals is unavailable, if its result has ok set to false, if the result has no study_mode_enabled field or that field is not a boolean, or if study_mode_enabled is false, take no action: send the user no message about the file, call no tool other than get_comprehension_vitals, and flag no file. Study Mode off must never block the user. Step 3: only if study_mode_enabled is true, count the lines of each file that the tool call just created or wrote, using the file content after the write. Split the content on line breaks; blank lines count, and a final line break does not start an extra line. Step 4: for each such file with more than 25 lines, tell the user in a message the file's repository-relative path and its line count, and call dissect_symbol on at least one symbol defined in that file before you treat the file as accepted. Step 5: flag a given file at most once in this session while its content is unchanged; flag it again only after its content changes. Never flag a file of 25 lines or fewer. Never delete, revert, or modify user code as part of this check."
+      }
+    }
+  ]
+}

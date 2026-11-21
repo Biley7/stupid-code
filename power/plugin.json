@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "stupid-code",
+  "version": "0.1.0",
+  "description": "Stupid Code (Code Autopsy Edition): grounded L1-L3 code dissection, blast radius, spec drift, architecture topology, and Study Mode comprehension vitals through a local MCP server.",
+  "author": {
+    "name": "Stupid Code"
+  },
+  "keywords": [
+    "code autopsy",
+    "stupid code",
+    "dissect",
+    "blast radius",
+    "spec drift",
+    "architecture",
+    "study mode",
+    "comprehension"
+  ],
+  "license": "MIT"
+}

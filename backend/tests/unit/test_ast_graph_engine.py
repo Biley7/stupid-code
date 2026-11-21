@@ -6776,11 +6776,27 @@ def _py_files(rel: str) -> set[str]:
     }
 
 
+# Spec #03 adds these files (user-approved exception to Req 24.3)
 @pytest.mark.parametrize(
     ("rel", "expected"),
     [
-        ("backend/api", {"main.py"}),
-        ("backend/mcp_server", set()),
+        (
+            "backend/api",
+            {
+                "main.py",
+                "settings.py",
+                "errors.py",
+                "rate_limit.py",
+                "crew_signature.py",
+                "services.py",
+                "schemas.py",
+                "routes/repos.py",
+                "routes/autopsy.py",
+                "routes/mastery.py",
+                "routes/crew.py",
+            },
+        ),
+        ("backend/mcp_server", {"server.py"}),
         ("power", set()),
         ("crew", set()),
         ("ui", set()),

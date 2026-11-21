@@ -491,3 +491,156 @@ __all__ += [
     "SyntaxAnnotation",
     "TopologyProfile",
 ]
+
+
+# --- Spec #03: mastery, Study Mode, and Socratic models ---
+
+_REPO_ID_PATTERN = re.compile(r"[A-Za-z0-9._-]{1,100}")
+_UTC_TIMESTAMP_PATTERN = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z")
+_UTC_TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+
+
+def _check_repo_id(value: str) -> str:
+    if _REPO_ID_PATTERN.fullmatch(value) is None:
+        raise ValueError("repo_id must be 1 to 100 characters from A-Z, a-z, 0-9, '.', '_', '-'")
+    return value
+
+
+def _check_utc_timestamp(value: str) -> str:
+    from datetime import datetime
+
+    if _UTC_TIMESTAMP_PATTERN.fullmatch(value) is None:
+        raise ValueError("timestamp must be UTC ISO 8601 like 2025-01-31T12:00:00Z")
+    try:
+        datetime.strptime(value, _UTC_TIMESTAMP_FORMAT)
+    except ValueError:
+        raise ValueError("timestamp is not a valid calendar date and time") from None
+    return value
+
+
+def _stripped_length_check(maximum: int) -> AfterValidator:
+    def check(value: str) -> str:
+        if not 1 <= len(value.strip()) <= maximum:
+            raise ValueError(f"must have 1 to {maximum} characters after stripping")
+        return value
+
+    return AfterValidator(check)
+
+
+def _Text(maximum: int) -> object:
+    """Return a strict string type of 1 to ``maximum`` characters after stripping."""
+    return Annotated[StrictStr, _stripped_length_check(maximum)]
+
+
+RepoId = Annotated[StrictStr, AfterValidator(_check_repo_id)]
+_Id500 = Annotated[StrictStr, Field(min_length=1, max_length=500)]
+_Concept = Annotated[StrictStr, _stripped_length_check(100)]
+UtcTimestamp = Annotated[StrictStr, AfterValidator(_check_utc_timestamp)]
+_EaseFloat = Annotated[
+    float,
+    BeforeValidator(_reject_bool),
+    Field(strict=True, ge=1.3, allow_inf_nan=False),
+]
+_Percent = Annotated[
+    float,
+    BeforeValidator(_reject_bool),
+    Field(strict=True, ge=0.0, le=100.0, allow_inf_nan=False),
+]
+_Count = Annotated[StrictInt, Field(ge=0)]
+
+
+class MasteryState(StrEnum):
+    UNAUDITED = "UNAUDITED"
+    DISSECTED = "DISSECTED"
+    MASTERED = "MASTERED"
+    STALE = "STALE"
+
+
+class ModuleMastery(BaseModel):
+    model_config = _CONFIG
+
+    repo_id: RepoId
+    target_id: _Id500
+    ast_hash: _Id500
+    state: MasteryState
+    ease_factor: _EaseFloat = 2.5
+    interval_days: _Count = 0
+    repetitions: _Count = 0
+    next_review_at: UtcTimestamp | None = None
+    last_verified_at: UtcTimestamp | None = None
+
+
+class SocraticQuestion(BaseModel):
+    model_config = _CONFIG
+
+    question_id: _Id500
+    target_id: _Id500
+    prompt: _Text(1000)
+    line_reference: _Id500
+    expected_concepts: Annotated[list[_Concept], Field(max_length=10)]
+
+
+class SocraticCheck(BaseModel):
+    model_config = _CONFIG
+
+    repo_id: RepoId
+    target_id: _Id500
+    questions: Annotated[list[SocraticQuestion], Field(min_length=1, max_length=2)]
+
+
+class SocraticAnswerItem(BaseModel):
+    model_config = _CONFIG
+
+    question_id: _Id500
+    answer: _Text(2000)
+
+
+class SocraticVerdict(BaseModel):
+    model_config = _CONFIG
+
+    target_id: _Id500
+    passed: StrictBool
+    score: UnitFloat
+    feedback: _Text(1000)
+    new_state: MasteryState
+    next_review_at: UtcTimestamp | None
+
+
+class ComprehensionVitals(BaseModel):
+    model_config = _CONFIG
+
+    repo_id: RepoId
+    study_mode_enabled: StrictBool
+    total_modules: _Count
+    unaudited_count: _Count
+    dissected_count: _Count
+    mastered_count: _Count
+    stale_count: _Count
+    mastery_percentage: _Percent
+    due_for_review: list[StrictStr]
+    file_states: dict[RelativePath, MasteryState]
+
+    @model_validator(mode="after")
+    def _check_vitals(self) -> "ComprehensionVitals":
+        if len(self.file_states) > self.total_modules:
+            raise ValueError("file_states must not have more entries than total_modules")
+        return self
+
+
+class SocraticGrade(BaseModel):
+    model_config = _CONFIG
+
+    score: UnitFloat
+    feedback: _Text(1000)
+
+
+__all__ += [
+    "ComprehensionVitals",
+    "MasteryState",
+    "ModuleMastery",
+    "SocraticAnswerItem",
+    "SocraticCheck",
+    "SocraticGrade",
+    "SocraticQuestion",
+    "SocraticVerdict",
+]
