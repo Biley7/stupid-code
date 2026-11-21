@@ -1,0 +1,25 @@
+# =============================================================================
+# IMPORTANT: /.kiro MUST remain tracked in Git. Kiro steering, specs, hooks,
+# and project configuration are essential project artifacts and must never be
+# ignored. Never add `.kiro/`, `.kiro/**`, `.kiro/steering/`, `.kiro/specs/`,
+# or `.kiro/hooks/` to this file.
+# =============================================================================
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.hypothesis/
+*.db-wal
+*.db-shm
+
+# Node / Frontend
+ui/node_modules/
+ui/dist/
+
+# macOS
+.DS_Store
+
+# Environment / Secrets
+.env
