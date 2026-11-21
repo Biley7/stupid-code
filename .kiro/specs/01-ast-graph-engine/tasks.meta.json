@@ -1,0 +1,978 @@
+{
+  "pbtResults": {
+    "10.2 Write property test for AST hash sensitivity": {
+      "status": "passed",
+      "lastRunTimestamp": 1795252265042
+    },
+    "10.3 Write property test for cycle detection and graph integrity": {
+      "status": "passed",
+      "lastRunTimestamp": 1795253939542
+    },
+    "10.4 Write property test for blast-radius monotonicity": {
+      "status": "passed",
+      "lastRunTimestamp": 1795255141436
+    }
+  },
+  "executionHistory": {
+    "1.1 Create `pytest.ini` and confirm dependencies": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685580
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240709499
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240772045
+      }
+    ],
+    "1.2 Implement `backend/domain/models.py`": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685651
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240777619
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795241167681
+      }
+    ],
+    "2.1 Implement ingestion types and URL validation in `backend/engines/ingestion.py`": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685679
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795241356448
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795241648872
+      }
+    ],
+    "2.2 Implement `discover_local`": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685703
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795241678110
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795241982111
+      }
+    ],
+    "2.3 Implement `discover_github`": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685727
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795241989355
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795242790455
+      }
+    ],
+    "3. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685754
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244034886
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244069368
+      }
+    ],
+    "4.1 Implement parser common mechanics and the normalized hash in `backend/engines/ast_parser.py`": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685777
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244075886
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244253685
+      }
+    ],
+    "4.2 Implement the shared symbol walk and Python extraction": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685809
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244259996
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244439941
+      }
+    ],
+    "4.3 Implement TypeScript, JavaScript, and TSX extraction": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685834
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244446103
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244731991
+      }
+    ],
+    "4.4 Implement Java extraction": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685857
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244738254
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244916041
+      }
+    ],
+    "4.5 Implement syntax-error recovery across languages": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685882
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244925448
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245056065
+      }
+    ],
+    "5. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685906
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245814755
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245841882
+      }
+    ],
+    "6.1 Implement `build_graph` with import resolution in `backend/engines/graph_engine.py`": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685929
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245842483
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245979537
+      }
+    ],
+    "6.2 Implement call resolution": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685953
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245985479
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246058411
+      }
+    ],
+    "6.3 Implement `compute_vital_organs` with pure-Python PageRank": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240685975
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246065222
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246144006
+      }
+    ],
+    "6.4 Implement `detect_cycles`": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686043
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246243111
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246297940
+      }
+    ],
+    "6.5 Implement `trace_blast_radius`": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686072
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246304943
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246370395
+      }
+    ],
+    "6.6 Implement `build_snapshot`": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686097
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246376665
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246462921
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246469162
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246551035
+      }
+    ],
+    "7. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686123
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795247703474
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795247749060
+      }
+    ],
+    "8.1 Implement scanner scaffolding in `backend/engines/dsa_scanner.py`": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686161
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795247755788
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795248527213
+      }
+    ],
+    "8.2 Implement Hash Tables rules": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686182
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795248534783
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795248884071
+      }
+    ],
+    "8.3 Write positive and negative fixtures for Hash Tables": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686203
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795248890872
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795249074533
+      }
+    ],
+    "8.4 Implement Graphs & Trees rules": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686223
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795249081998
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795249260000
+      }
+    ],
+    "8.5 Write positive and negative fixtures for Graphs & Trees": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686247
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795249266816
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795249409715
+      }
+    ],
+    "8.6 Implement Recursion & Dynamic Programming rules": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686273
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795249416930
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795249544751
+      }
+    ],
+    "8.7 Write positive and negative fixtures for Recursion & DP": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686297
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795249552186
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795249682461
+      }
+    ],
+    "8.8 Implement Heaps & Priority Queues rules": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686320
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795249690722
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795249858266
+      }
+    ],
+    "8.9 Write positive and negative fixtures for Heaps & PQ": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686345
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795249865069
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795250128481
+      }
+    ],
+    "8.10 Implement Sorting & Binary Search rules": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686368
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795250135074
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795250327264
+      }
+    ],
+    "8.11 Write positive and negative fixtures for Sorting & Binary Search": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686399
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795250334007
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795250462224
+      }
+    ],
+    "8.12 Implement Sliding Window / Two Pointers rules": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686423
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795250469522
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795250688490
+      }
+    ],
+    "8.13 Write positive and negative fixtures for Two Pointers": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686453
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795250695511
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795251196776
+      }
+    ],
+    "8.14 Write negative fixtures for non-pattern code": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686487
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795251203428
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795251502448
+      }
+    ],
+    "9. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686518
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795251896447
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795251931507
+      }
+    ],
+    "10.1 Write property test for AST hash invariance": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686568
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795251932054
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795252130062
+      }
+    ],
+    "10.2 Write property test for AST hash sensitivity": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686592
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795252137198
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795252392160
+      }
+    ],
+    "10.3 Write property test for cycle detection and graph integrity": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686615
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795252400862
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795253961754
+      }
+    ],
+    "10.4 Write property test for blast-radius monotonicity": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686639
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795253969615
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795255158789
+      }
+    ],
+    "11.2 Run full pytest and ruff, and fix failures": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686662
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795255336629
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795255445055
+      }
+    ],
+    "11.3 Run determinism, offline, and safety checks": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686700
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795255453342
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795255701519
+      }
+    ],
+    "12. Final checkpoint - Ensure all tests pass and report honestly": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795240686736
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795255708661
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795255805524
+      }
+    ],
+    "1.3 Write unit tests for the domain models": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795241176179
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795241356466
+      }
+    ],
+    "1. Test configuration and domain models": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795241356496
+      }
+    ],
+    "2.4 Write unit tests for URL validation and destination containment": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795242797905
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795243175764
+      }
+    ],
+    "2.5 Write unit tests for local discovery": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795243182293
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795243883005
+      }
+    ],
+    "2.6 Write unit tests for cloning with a test double": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795243889611
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244029057
+      }
+    ],
+    "2. Ingestion engine": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795244029096
+      }
+    ],
+    "4.6 Write unit tests for parser basics and hashing": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245056402
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245172919
+      }
+    ],
+    "4.7 Write unit tests for Python parsing": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245191960
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245347089
+      }
+    ],
+    "4.8 Write unit tests for TypeScript, JavaScript, and TSX parsing": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245355085
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245550987
+      }
+    ],
+    "4.9 Write unit tests for Java parsing": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245557274
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245699520
+      }
+    ],
+    "4.10 Write unit tests for syntax-error recovery": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245706413
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245808078
+      }
+    ],
+    "4. AST parser": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795245808116
+      }
+    ],
+    "6.7 Write unit tests for graph construction and import edges": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246557764
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246687646
+      }
+    ],
+    "6.8 Write unit tests for call edges": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246694898
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246891541
+      }
+    ],
+    "6.9 Write unit tests for vital organs": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795246898145
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795247179095
+      }
+    ],
+    "6.10 Write unit tests for cycle detection": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795247185344
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795247286899
+      }
+    ],
+    "6.11 Write unit tests for blast radius": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795247294250
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795247430758
+      }
+    ],
+    "6.12 Write unit tests for snapshot assembly": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795247437619
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795247696791
+      }
+    ],
+    "6. Graph engine": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795247696816
+      }
+    ],
+    "8.15 Write unit tests for scanner behavior": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795251509347
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795251889784
+      }
+    ],
+    "8. DSA scanner": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795251889824
+      }
+    ],
+    "10. Hypothesis property tests": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795255158828
+      }
+    ],
+    "11.1 Write smoke tests for configuration, layering, and scope": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795255166604
+      },
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795255328024
+      }
+    ],
+    "11. Final verification": [
+      {
+        "executionId": "aedc1dc1-fb7e-4863-b6f0-59615e231288",
+        "chatSessionId": "sess_7c3a1a5a-0dfb-4b48-9638-34855bc74c93",
+        "timestamp": 1795255701577
+      }
+    ]
+  }
+}
