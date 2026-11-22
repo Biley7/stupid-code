@@ -19,7 +19,7 @@ const config: Config = {
       stale: 'var(--color-stale)',
     },
     fontFamily: {
-      sans: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+      sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
       mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
     },
   },

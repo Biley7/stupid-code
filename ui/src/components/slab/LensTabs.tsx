@@ -11,9 +11,9 @@ export const LENS_TAB_ID_PREFIX = 'lens';
 export const LENS_PANEL_ID = 'lens-tabpanel';
 
 export const LENS_TABS: readonly (TabItem & { id: Lens })[] = [
-  { id: 'L1_SYNTAX', label: 'L1_SYNTAX' },
-  { id: 'L2_FLOW', label: 'L2_FLOW' },
-  { id: 'L3_ARCHITECTURE', label: 'L3_ARCHITECTURE' },
+  { id: 'L1_SYNTAX', label: 'L1 Syntax' },
+  { id: 'L2_FLOW', label: 'L2 Flow + DSA' },
+  { id: 'L3_ARCHITECTURE', label: 'L3 Architecture' },
 ];
 
 /** Id of the tab for a lens, for `aria-labelledby` on the tabpanel. */
@@ -36,6 +36,7 @@ export function LensTabs() {
       ariaLabel="Lens"
       idPrefix={LENS_TAB_ID_PREFIX}
       panelId={LENS_PANEL_ID}
+      fill
     />
   );
 }

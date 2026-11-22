@@ -1,14 +1,19 @@
 @import './tokens.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  /* Root shell lock: the page itself never scrolls. Only the Specimen Rail, the Canvas
+     and the Autopsy Slab own scrollbars, so the app cannot scroll into an empty void. */
   html,
   body,
   #app-root {
-    height: 100%;
+    @apply h-screen w-screen overflow-hidden;
+  }
+
+  #app-root {
+    @apply flex flex-col;
   }
 
   body {
@@ -16,13 +21,31 @@
     background-color: var(--color-obsidian);
     color: var(--color-bone);
     font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
   }
 
+  /* Monospace is reserved for code signatures, line numbers, paths and hashes. */
   code,
   pre,
   kbd,
   samp {
     font-family: var(--font-mono);
+  }
+
+  /* Thin, dark scrollbars on every scroll container. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-hairline) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--color-hairline);
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
   }
 
   /* Visible focus indicator for every interactive element, in both modes. */
@@ -32,36 +55,85 @@
   }
 }
 
+/* React Flow chrome on the obsidian canvas (both modes: this is legibility, not decoration). */
+.react-flow {
+  --xy-controls-button-background-color: var(--color-surface);
+  --xy-controls-button-background-color-hover: var(--color-hairline);
+  --xy-controls-button-color: var(--color-bone);
+  --xy-controls-button-color-hover: var(--color-bone);
+  --xy-controls-button-border-color: var(--color-hairline);
+  --xy-controls-box-shadow: none;
+  --xy-attribution-background-color: transparent;
+  background: transparent;
+}
+.react-flow__controls {
+  border: 1px solid var(--color-hairline);
+  box-shadow: none;
+}
+.react-flow__controls-button {
+  fill: var(--color-bone);
+}
+.react-flow__controls-button svg {
+  fill: currentColor;
+}
+.react-flow__attribution {
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 9px;
+  opacity: 0.45;
+}
+.react-flow__attribution a {
+  color: var(--color-muted);
+}
+
 /* Autopsy-only decoration. Lab mode defines none of these rules. */
 
-/* Coordinate grid: two hairline gradients on the Canvas container. */
+/* Coordinate grid: two faint hairline gradients on the Canvas container. */
 [data-visual-mode='autopsy'] .canvas-grid {
   position: relative;
   background-image:
-    linear-gradient(to right, var(--color-hairline) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-hairline) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in srgb, var(--color-hairline) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-hairline) 55%, transparent) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
-/* Shroud: static scanline texture over UNAUDITED nodes. No blur, no halo. */
+/* Haunted Shroud: frosted obsidian surface, a faint scanline texture and a crimson
+   status accent on UNAUDITED nodes. No halo, no bloom. */
 [data-visual-mode='autopsy'] .node-unaudited {
   position: relative;
+  background-color: color-mix(in srgb, var(--color-surface) 70%, transparent);
+  background-image: linear-gradient(180deg, rgba(244, 244, 245, 0.05), rgba(9, 9, 11, 0.4));
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  border-color: color-mix(in srgb, var(--color-crimson) 55%, var(--color-hairline));
+  box-shadow: inset 3px 0 0 var(--color-crimson);
 }
-
 [data-visual-mode='autopsy'] .node-unaudited::after {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.25;
+  opacity: 0.18;
   background-image: repeating-linear-gradient(
     to bottom,
-    var(--color-hairline) 0,
-    var(--color-hairline) 1px,
+    var(--color-bone) 0,
+    var(--color-bone) 1px,
     transparent 1px,
-    transparent 3px
+    transparent 4px
   );
   transition: opacity 200ms linear;
+}
+
+/* Surgical emerald outline on MASTERED nodes. */
+[data-visual-mode='autopsy'] .node-mastered {
+  border-color: var(--color-verified);
+  box-shadow: inset 0 0 0 1px var(--color-verified);
+}
+
+/* Focal ring on the selected node: a sharp offset outline, no glow. */
+[data-visual-mode='autopsy'] .node-selected {
+  outline: 2px solid var(--color-bone);
+  outline-offset: 3px;
 }
 
 /* Fracture pulse: stroke opacity toggle on circular edges. No blur. */
@@ -74,7 +146,6 @@
     stroke-opacity: 0.4;
   }
 }
-
 [data-visual-mode='autopsy'] .edge-circular {
   animation: fracture-pulse 1.6s linear infinite;
 }

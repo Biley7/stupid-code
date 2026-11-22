@@ -135,9 +135,9 @@ describe('Autopsy_Slab lenses', () => {
     await waitFor(() => expect(mock!.calls.some((c) => c.path === '/api/repos/alpha/vitals')).toBe(true));
     act(() => dispatch!({ type: 'select-target', target: { kind: 'file', path: FILE } }));
     expect(await screen.findByText('Pick a symbol in this file to explain it.')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('tab', { name: 'L2_FLOW' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'L2 Flow + DSA' }));
     expect(screen.getByText('Pick a symbol in this file to explain it.')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('tab', { name: 'L1_SYNTAX' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'L1 Syntax' }));
     expect(explainCalls()).toHaveLength(0);
 
     // Pick a symbol: L1 request with the symbol id.
@@ -150,7 +150,7 @@ describe('Autopsy_Slab lenses', () => {
     // Tabs: tablist semantics.
     const tablist = screen.getByRole('tablist', { name: 'Lens' });
     const tabs = within(tablist).getAllByRole('tab');
-    expect(tabs.map((t) => t.textContent)).toEqual(['L1_SYNTAX', 'L2_FLOW', 'L3_ARCHITECTURE']);
+    expect(tabs.map((t) => t.textContent)).toEqual(['L1 Syntax', 'L2 Flow + DSA', 'L3 Architecture']);
     expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', tabs[0]!.id);
 
@@ -169,8 +169,8 @@ describe('Autopsy_Slab lenses', () => {
     tabs[0]!.focus();
     fireEvent.keyDown(tabs[0]!, { key: 'ArrowRight' });
     expect(await screen.findByText('DSA-in-the-Wild')).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: 'L2_FLOW' })).toHaveAttribute('aria-selected', 'true');
-    expect(screen.getByRole('tab', { name: 'L2_FLOW' })).toHaveFocus();
+    expect(screen.getByRole('tab', { name: 'L2 Flow + DSA' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: 'L2 Flow + DSA' })).toHaveFocus();
     expect(screen.getByText('Create the graph')).toBeInTheDocument();
     expect(screen.getByText('Upstream callers')).toBeInTheDocument();
     expect(screen.getByText('Blast radius')).toBeInTheDocument();
@@ -179,15 +179,15 @@ describe('Autopsy_Slab lenses', () => {
     expect(screen.queryByText(/Generated flow content is unavailable/)).toBeNull();
 
     // L3 via End: first request fails, error with retry, not cached.
-    fireEvent.keyDown(screen.getByRole('tab', { name: 'L2_FLOW' }), { key: 'End' });
+    fireEvent.keyDown(screen.getByRole('tab', { name: 'L2 Flow + DSA' }), { key: 'End' });
     const alert = await screen.findByRole('alert');
     expect(alert).toHaveTextContent('The explanation service is unavailable. No explanation was produced.');
     expect(alert).not.toHaveTextContent('raw server text');
     expect(explainCalls().filter((c) => (c.body as { lens: string }).lens === 'L3_ARCHITECTURE')).toHaveLength(1);
     // Other Lenses stay usable; coming back refetches because failures are not cached.
-    fireEvent.click(screen.getByRole('tab', { name: 'L1_SYNTAX' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'L1 Syntax' }));
     await screen.findByText('Defines build.');
-    fireEvent.click(screen.getByRole('tab', { name: 'L3_ARCHITECTURE' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'L3 Architecture' }));
     await screen.findByRole('alert');
     expect(explainCalls().filter((c) => (c.body as { lens: string }).lens === 'L3_ARCHITECTURE')).toHaveLength(2);
 
@@ -204,7 +204,7 @@ describe('Autopsy_Slab lenses', () => {
 
     // Another symbol on L2: degraded notice, deterministic fields, and no DSA section.
     act(() => dispatch!({ type: 'select-target', target: { kind: 'symbol', id: WALK, filePath: FILE } }));
-    fireEvent.click(screen.getByRole('tab', { name: 'L2_FLOW' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'L2 Flow + DSA' }));
     await screen.findByText(/Generated flow content is unavailable/);
     expect(screen.getByText('Create the graph')).toBeInTheDocument();
     expect(screen.queryByText('DSA-in-the-Wild')).toBeNull();

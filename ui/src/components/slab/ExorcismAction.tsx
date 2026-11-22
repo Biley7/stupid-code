@@ -46,7 +46,7 @@ export function ExorcismAction() {
               opened.current = { repoId, symbol };
               socratic.open(repoId, symbol);
             }}
-            className="self-start border border-hairline px-3 py-1 text-sm text-bone hover:border-bone aria-disabled:text-muted aria-disabled:hover:border-hairline"
+            className="w-full border border-bone px-3 py-1.5 text-sm font-semibold tracking-wide text-bone hover:bg-bone hover:text-obsidian aria-disabled:border-hairline aria-disabled:text-muted aria-disabled:hover:bg-transparent aria-disabled:hover:text-muted"
           >
             Exorcism Check
           </button>

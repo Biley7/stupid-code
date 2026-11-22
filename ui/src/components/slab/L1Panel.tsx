@@ -13,19 +13,19 @@ function lineRange(start: number, end: number): string {
 
 export function L1Panel({ l1 }: L1PanelProps) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex min-w-0 flex-col gap-4">
       <section aria-labelledby="l1-summary">
         <h3 id="l1-summary" className="m-0 text-xs font-semibold uppercase text-muted">
           Summary
         </h3>
-        <PlainText as="p" className="m-0 mt-1 text-bone" text={l1.summary} />
+        <PlainText as="p" className="m-0 mt-1 break-words text-bone" text={l1.summary} />
       </section>
 
       <section aria-labelledby="l1-language">
         <h3 id="l1-language" className="m-0 text-xs font-semibold uppercase text-muted">
           Language
         </h3>
-        <PlainText as="p" className="m-0 mt-1 font-mono text-bone" text={l1.language} />
+        <PlainText as="p" className="m-0 mt-1 text-bone" text={l1.language} />
       </section>
 
       <section aria-labelledby="l1-annotations">
@@ -37,19 +37,19 @@ export function L1Panel({ l1 }: L1PanelProps) {
         ) : (
           <ol className="m-0 mt-1 flex list-none flex-col gap-3 p-0">
             {l1.annotations.map((a, i) => (
-              <li key={i} className="border border-hairline p-2">
+              <li key={i} className="min-w-0 border border-hairline p-2">
                 <div className="flex flex-wrap items-baseline gap-2">
                   <span className="font-mono text-xs text-muted">
                     <span className="sr-only">Lines </span>
                     {lineRange(a.line_start, a.line_end)}
                   </span>
-                  <PlainText className="font-mono text-bone" text={a.construct} />
+                  <PlainText className="min-w-0 break-words font-mono text-[13px] text-bone" text={a.construct} />
                 </div>
-                <PlainText as="p" className="m-0 mt-1 text-bone" text={a.explanation} />
+                <PlainText as="p" className="m-0 mt-1 break-words text-bone" text={a.explanation} />
                 {a.what_if_removed.trim() !== '' && (
                   <div className="mt-2 border-l-2 border-crimson bg-surface p-2">
                     <h4 className="m-0 text-xs font-semibold text-muted">What breaks if removed?</h4>
-                    <PlainText as="p" className="m-0 mt-1 text-bone" text={a.what_if_removed} />
+                    <PlainText as="p" className="m-0 mt-1 break-words text-bone" text={a.what_if_removed} />
                   </div>
                 )}
               </li>
@@ -62,7 +62,7 @@ export function L1Panel({ l1 }: L1PanelProps) {
         <h3 id="l1-takeaway" className="m-0 text-xs font-semibold uppercase text-muted">
           Key takeaway
         </h3>
-        <PlainText as="p" className="m-0 mt-1 text-bone" text={l1.key_takeaway} />
+        <PlainText as="p" className="m-0 mt-1 break-words text-bone" text={l1.key_takeaway} />
       </section>
     </div>
   );

@@ -64,13 +64,13 @@ function ActiveView() {
 export function Canvas() {
   const { view } = useAppState();
   return (
-    <main aria-label="Canvas" className="canvas-grid flex min-w-0 flex-1 flex-col overflow-auto">
+    <main aria-label="Canvas" className="canvas-grid flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <ViewTabs />
       <div
         role="tabpanel"
         id={VIEW_PANEL_ID}
         aria-labelledby={tabId(VIEW_TAB_ID_PREFIX, view)}
-        className="min-h-0 flex-1"
+        className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden"
       >
         <ErrorBoundary region="Canvas">
           <ActiveView />

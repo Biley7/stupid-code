@@ -15,6 +15,8 @@ export interface TabsProps {
   idPrefix: string;
   /** Id of the single tabpanel the owner renders, with `aria-labelledby` set to the selected tab id. */
   panelId: string;
+  /** Spread the tabs across the full width with a compact size. */
+  fill?: boolean;
 }
 
 /** Tab id helper so the owner can label its tabpanel. */
@@ -23,7 +25,7 @@ export function tabId(idPrefix: string, id: string): string {
 }
 
 /** `tablist` with roving tabindex: Left/Right with wrap, Home, End. Selection follows focus. */
-export function Tabs({ tabs, selectedId, onSelect, ariaLabel, idPrefix, panelId }: TabsProps) {
+export function Tabs({ tabs, selectedId, onSelect, ariaLabel, idPrefix, panelId, fill = false }: TabsProps) {
   const refs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   function move(index: number) {
@@ -74,7 +76,7 @@ export function Tabs({ tabs, selectedId, onSelect, ariaLabel, idPrefix, panelId 
             tabIndex={selected || (!hasSelected && index === 0) ? 0 : -1}
             onClick={() => onSelect(tab.id)}
             onKeyDown={(e) => onKeyDown(e, index)}
-            className={`px-3 py-2 text-sm ${
+            className={`${fill ? 'min-w-0 flex-1 whitespace-nowrap px-1.5 py-2 text-xs' : 'px-3 py-2 text-sm'} ${
               selected
                 ? 'border-b-2 border-bone font-semibold text-bone'
                 : 'border-b-2 border-transparent text-muted hover:text-bone'

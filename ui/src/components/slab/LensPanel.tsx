@@ -35,7 +35,7 @@ function SymbolPicker({ filePath }: { filePath: string }) {
             <button
               type="button"
               onClick={() => dispatch({ type: 'select-target', target: { kind: 'symbol', id: s.id, filePath: s.file_path } })}
-              className="w-full border border-hairline px-2 py-1 text-left font-mono text-sm text-bone hover:border-bone"
+              className="w-full border border-hairline px-2 py-1 text-left font-mono text-[13px] text-bone hover:border-bone"
             >
               <PlainText text={s.qualname} />
             </button>
@@ -106,7 +106,7 @@ export function LensPanel() {
       aria-labelledby={lensTabId(app.lens)}
       aria-busy={explain.status === 'loading'}
       tabIndex={0}
-      className="p-2"
+      className="min-w-0 break-words p-3"
     >
       {body}
     </div>

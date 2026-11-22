@@ -64,7 +64,7 @@ export function DriftPanel() {
             type="button"
             aria-pressed={filter === f}
             onClick={() => setFilterState({ repoId, value: f })}
-            className={`border px-2 py-1 font-mono text-xs ${
+            className={`border px-2 py-1 text-[11px] font-medium ${
               filter === f ? 'border-bone text-bone' : 'border-hairline text-muted'
             }`}
           >
@@ -98,11 +98,11 @@ export function DriftPanel() {
                     selected ? 'bg-surface text-bone' : 'text-muted'
                   } ${navigable ? '' : 'cursor-not-allowed'}`}
                 >
-                  <PlainText text={item.drift_type} as="div" className="font-mono text-xs text-signal" />
-                  <PlainText text={item.target} as="div" className="font-mono break-all text-bone" />
-                  <PlainText text={item.details} as="div" className="text-xs" />
+                  <PlainText text={item.drift_type} as="div" className="text-[11px] font-semibold tracking-wide text-signal" />
+                  <PlainText text={item.target} as="div" className="break-all font-mono text-[13px] text-bone" />
+                  <PlainText text={item.details} as="div" className="break-words text-xs" />
                   {navigable ? null : (
-                    <span className="font-mono text-xs text-muted">NOT IN SNAPSHOT</span>
+                    <span className="text-[11px] font-medium text-muted">NOT IN SNAPSHOT</span>
                   )}
                 </button>
               </li>
@@ -119,10 +119,10 @@ export function DriftPanel() {
             <ul className="m-0 list-none p-0">
               {links.map((link, i) => (
                 <li key={`${i}:${link.spec_name}:${link.section_title}`} className="mb-2">
-                  <PlainText text={link.spec_name} as="div" className="font-mono text-bone" />
-                  <PlainText text={link.source_file} as="div" className="font-mono text-xs text-muted" />
+                  <PlainText text={link.spec_name} as="div" className="break-words text-bone" />
+                  <PlainText text={link.source_file} as="div" className="break-all font-mono text-xs text-muted" />
                   <PlainText text={link.section_title} as="div" className="text-bone" />
-                  <PlainText text={link.excerpt} as="div" className="text-xs text-muted" />
+                  <PlainText text={link.excerpt} as="div" className="break-words text-xs text-muted" />
                 </li>
               ))}
             </ul>

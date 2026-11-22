@@ -151,7 +151,7 @@ describe('graph and canvas (test case 15)', () => {
     // Symbol with an L2 response: blast radius highlight comes from the explain result.
     fireEvent.click(organs[2]!);
     fireEvent.click(screen.getByRole('button', { name: 'Symbols' }));
-    fireEvent.click(within(slab).getByRole('tab', { name: 'L2_FLOW' }));
+    fireEvent.click(within(slab).getByRole('tab', { name: 'L2 Flow + DSA' }));
     await within(slab).findByRole('heading', { name: 'Blast radius' });
     await waitFor(() => expect(screen.getByText(/blast radius from blast-radius result/)).toBeInTheDocument());
     expect(screen.getByText(/impact_score 0\.5/)).toBeInTheDocument();

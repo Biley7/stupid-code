@@ -1,8 +1,12 @@
 {
   "mcpServers": {
     "stupid-code": {
-      "command": ".venv/bin/python",
-      "args": ["backend/mcp_server/server.py"]
+      "command": "/Users/binayakroy/stupid-code/.venv/bin/python",
+      "args": ["/Users/binayakroy/stupid-code/backend/mcp_server/server.py"],
+      "env": {
+        "PYTHONPATH": "/Users/binayakroy/stupid-code"
+      },
+      "disabled": false
     }
   }
 }

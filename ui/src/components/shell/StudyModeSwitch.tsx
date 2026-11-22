@@ -19,9 +19,21 @@ export function StudyModeSwitch() {
         aria-label={label}
         disabled={repoId === null || pending}
         onClick={() => toggle(!on)}
-        className={`border px-2 py-1 disabled:text-muted ${on ? 'border-verified text-bone' : 'border-hairline text-muted'}`}
+        className={`inline-flex items-center gap-2 rounded-sm border px-2.5 py-1 text-xs font-medium disabled:text-muted ${
+          on ? 'border-verified text-bone' : 'border-hairline text-muted hover:text-bone'
+        }`}
       >
-        {on ? 'Study Mode: On' : studyMode === 'unknown' ? 'Study Mode: —' : 'Study Mode: Off'}
+        <span
+          aria-hidden="true"
+          className={`relative inline-block h-3.5 w-6 rounded-full ${on ? 'bg-verified' : 'bg-hairline'}`}
+        >
+          <span
+            className={`absolute top-0.5 h-2.5 w-2.5 rounded-full bg-bone transition-all ${
+              on ? 'left-3' : 'left-0.5'
+            }`}
+          />
+        </span>
+        <span>{on ? 'Study Mode: On' : studyMode === 'unknown' ? 'Study Mode: —' : 'Study Mode: Off'}</span>
       </button>
       {pending ? <span className="text-xs text-muted">Updating…</span> : null}
       {error ? <PlainText as="span" text={error.message} className="text-xs text-signal" /> : null}

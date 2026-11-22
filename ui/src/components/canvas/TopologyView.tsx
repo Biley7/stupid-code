@@ -60,7 +60,7 @@ export function TopologyView() {
     <div className="space-y-4 p-3 text-sm text-bone">
       <section aria-label="Detected pattern">
         <PlainText text={topology.detected_pattern} as="h2" className="text-base font-semibold" />
-        <p className="font-mono text-xs text-muted">
+        <p className="text-xs text-muted">
           Confidence {Math.round(topology.confidence * 100)}%
         </p>
       </section>
@@ -100,7 +100,7 @@ export function TopologyView() {
                     <PlainText text={dir} className="min-w-0 break-all font-mono text-xs" />
                     <PlainText
                       text={role}
-                      className={`font-mono text-xs ${known ? 'text-bone' : 'text-muted'}`}
+                      className={`shrink-0 text-xs ${known ? 'text-bone' : 'text-muted'}`}
                     />
                   </button>
                 </li>

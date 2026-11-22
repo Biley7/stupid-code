@@ -2,7 +2,7 @@
 // Mastery is shown as icon plus text; the Shroud is a CSS overlay on top of the text.
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
 import { memo, type KeyboardEvent } from 'react';
-import { MasteryBadge } from '../shared/MasteryBadge';
+import { MasteryDot } from '../shared/MasteryDot';
 import { PlainText } from '../shared/PlainText';
 import type { MasteryPresentation } from '../../core/mastery';
 import { NODE_HEIGHT, NODE_WIDTH } from '../../core/layout';
@@ -39,7 +39,19 @@ export function NodeFrame({ data }: { data: GraphNodeData }) {
       data.onClear();
     }
   };
+  // Border colour by role; the Autopsy-only shroud, mastered outline and selected ring
+  // classes (styles/index.css) refine this in Autopsy mode.
   const border = blast ? 'border-crimson' : selected || upstream || downstream ? 'border-bone' : 'border-hairline';
+  const classes = [
+    shroud ? 'node-unaudited' : '',
+    mastery.category === 'MASTERED' ? 'node-mastered' : '',
+    selected ? 'node-selected' : '',
+    'box-border flex flex-col justify-center gap-0.5 overflow-hidden border bg-surface px-2.5',
+    border,
+    selected ? 'border-2' : '',
+  ]
+    .filter((c) => c !== '')
+    .join(' ');
   return (
     <div
       role="button"
@@ -50,10 +62,8 @@ export function NodeFrame({ data }: { data: GraphNodeData }) {
       data-mastery={mastery.category}
       data-shroud={shroud ? 'true' : 'false'}
       onKeyDown={onKeyDown}
-      style={{ width: NODE_WIDTH, height: NODE_HEIGHT, opacity: dimmed ? 0.35 : 1 }}
-      className={`${shroud ? 'node-unaudited ' : ''}box-border flex flex-col justify-center overflow-hidden border bg-surface px-2 ${border} ${
-        selected ? 'border-2' : ''
-      }`}
+      style={{ width: NODE_WIDTH, height: NODE_HEIGHT, opacity: dimmed ? 0.3 : 1 }}
+      className={classes}
     >
       <Handle
         type="target"
@@ -66,14 +76,14 @@ export function NodeFrame({ data }: { data: GraphNodeData }) {
         title={id}
         className="block truncate font-mono text-xs text-bone"
       />
-      <span className="flex items-center gap-1 overflow-hidden">
-        <MasteryBadge presentation={mastery} className="!border-0 !px-0 !py-0 text-[10px]" />
-        {fileLevel ? <span className="font-mono text-[10px] text-muted">file-level</span> : null}
-        {kind ? <span className="truncate font-mono text-[10px] text-muted">{kind}</span> : null}
-        {selected ? <span className="font-mono text-[10px] text-bone">SELECTED</span> : null}
-        {blast ? <span className="font-mono text-[10px] text-signal">BLAST</span> : null}
-        {upstream ? <span className="font-mono text-[10px] text-bone">UPSTREAM</span> : null}
-        {downstream ? <span className="font-mono text-[10px] text-bone">DOWNSTREAM</span> : null}
+      <span className="flex items-center gap-1.5 overflow-hidden text-[10px]">
+        <MasteryDot presentation={mastery} showLabel />
+        {fileLevel ? <span className="text-muted">file-level</span> : null}
+        {kind ? <span className="truncate text-muted">{kind}</span> : null}
+        {selected ? <span className="font-semibold uppercase tracking-wider text-bone">Selected</span> : null}
+        {blast ? <span className="font-semibold uppercase tracking-wider text-signal">Blast</span> : null}
+        {upstream ? <span className="font-semibold uppercase tracking-wider text-bone">Upstream</span> : null}
+        {downstream ? <span className="font-semibold uppercase tracking-wider text-bone">Downstream</span> : null}
       </span>
       <Handle
         type="source"
@@ -84,7 +94,6 @@ export function NodeFrame({ data }: { data: GraphNodeData }) {
     </div>
   );
 }
-
 function FileNodeImpl({ data }: NodeProps<GraphFlowNode>) {
   return <NodeFrame data={data} />;
 }

@@ -19,14 +19,14 @@ function lineRange(start: number, end: number): string {
 function StringList({ id, title, items }: { id: string; title: string; items: string[] }) {
   if (items.length === 0) return null;
   return (
-    <section aria-labelledby={id}>
+    <section aria-labelledby={id} className="min-w-0">
       <h3 id={id} className={HEADING}>
         {title}
       </h3>
       <ul className="m-0 mt-1 flex list-none flex-col gap-1 p-0">
         {items.map((s, i) => (
-          <li key={i}>
-            <PlainText className="font-mono text-bone" text={s} />
+          <li key={i} className="min-w-0">
+            <PlainText className="break-all font-mono text-[13px] text-bone" text={s} />
           </li>
         ))}
       </ul>
@@ -42,19 +42,33 @@ interface ChipProps {
   onSelect: () => void;
 }
 
+/** Split `path::qualname` into a symbol pill and a file pill; an id without `::` is one pill. */
+function splitId(id: string): { file: string | null; symbol: string } {
+  const at = id.indexOf('::');
+  if (at < 0) return { file: null, symbol: id };
+  return { file: id.slice(0, at), symbol: id.slice(at + 2) };
+}
+
 function Chip({ id, direction, score, selectable, onSelect }: ChipProps) {
+  const { file, symbol } = splitId(id);
   const body = (
     <>
-      <span className="text-xs uppercase text-signal">{direction}</span>
-      <PlainText className="font-mono text-bone" text={id} />
-      <span className="font-mono text-xs text-muted">impact {score}</span>
+      <span className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
+        <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-signal">{direction}</span>
+        <PlainText className="min-w-0 break-all font-mono text-[13px] text-bone" text={symbol} />
+        <span className="shrink-0 text-[11px] tabular-nums text-muted">impact {score}</span>
+      </span>
+      {file !== null ? (
+        <PlainText as="span" className="block min-w-0 break-all font-mono text-[11px] text-muted" text={file} />
+      ) : null}
     </>
   );
-  const base = 'inline-flex items-baseline gap-2 border border-crimson px-2 py-1 text-sm';
+  const base = 'flex w-full min-w-0 flex-col gap-0.5 border border-crimson px-2 py-1.5 text-sm';
   if (selectable) {
     return (
       <button
         type="button"
+        title={id}
         onClick={onSelect}
         className={`${base} bg-surface text-left hover:bg-obsidian focus-visible:outline focus-visible:outline-2 focus-visible:outline-signal`}
       >
@@ -62,7 +76,11 @@ function Chip({ id, direction, score, selectable, onSelect }: ChipProps) {
       </button>
     );
   }
-  return <span className={base}>{body}</span>;
+  return (
+    <span title={id} className={base}>
+      {body}
+    </span>
+  );
 }
 
 export function L2Panel({ response }: L2PanelProps) {
@@ -100,7 +118,7 @@ export function L2Panel({ response }: L2PanelProps) {
     chips.length === 0;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex min-w-0 flex-col gap-4">
       {!l2.llm_content_available && (
         <p role="status" className="m-0 border border-crimson bg-surface p-2 text-bone">
           Generated flow content is unavailable. Deterministic fields are shown below.
@@ -109,22 +127,22 @@ export function L2Panel({ response }: L2PanelProps) {
       {allEmpty && <p className="m-0 text-muted">No flow data was returned for this target</p>}
 
       {steps.length > 0 && (
-        <section aria-labelledby="l2-steps">
+        <section aria-labelledby="l2-steps" className="min-w-0">
           <h3 id="l2-steps" className={HEADING}>
             Execution steps
           </h3>
           <ol className="m-0 mt-1 flex list-none flex-col gap-3 p-0">
             {steps.map((s, i) => (
-              <li key={i} className="border border-hairline p-2">
-                <div className="flex flex-wrap items-baseline gap-2">
-                  <span className="font-mono text-xs text-muted">
+              <li key={i} className="min-w-0 border border-hairline p-2">
+                <div className="flex min-w-0 flex-wrap items-baseline gap-2">
+                  <span className="shrink-0 font-mono text-xs text-muted">
                     <span className="sr-only">Step </span>
                     {s.step_number}
                   </span>
-                  <PlainText className="font-mono text-bone" text={s.location} />
+                  <PlainText className="min-w-0 break-all font-mono text-[13px] text-bone" text={s.location} />
                 </div>
-                <PlainText as="p" className="m-0 mt-1 text-bone" text={s.action} />
-                <PlainText as="p" className="m-0 mt-1 text-muted" text={s.data_transformation} />
+                <PlainText as="p" className="m-0 mt-1 min-w-0 break-words text-bone" text={s.action} />
+                <PlainText as="p" className="m-0 mt-1 min-w-0 break-words text-muted" text={s.data_transformation} />
               </li>
             ))}
           </ol>
@@ -136,23 +154,23 @@ export function L2Panel({ response }: L2PanelProps) {
       <StringList id="l2-effects" title="Side effects" items={l2.side_effects} />
 
       {l2.dsa_cards.length > 0 && (
-        <section aria-labelledby="l2-dsa">
+        <section aria-labelledby="l2-dsa" className="min-w-0">
           <h3 id="l2-dsa" className={HEADING}>
             DSA-in-the-Wild
           </h3>
           <ul className="m-0 mt-1 flex list-none flex-col gap-3 p-0">
             {l2.dsa_cards.map((c, i) => (
-              <li key={i} className="border border-hairline bg-surface p-2">
+              <li key={i} className="min-w-0 border border-hairline bg-surface p-2">
                 <div className="flex flex-wrap items-baseline gap-2">
-                  <PlainText className="text-xs uppercase text-muted" text={c.chapter} />
-                  <PlainText className="font-semibold text-bone" text={c.pattern_name} />
+                  <PlainText className="min-w-0 break-words text-xs uppercase text-muted" text={c.chapter} />
+                  <PlainText className="min-w-0 break-words font-semibold text-bone" text={c.pattern_name} />
                   <span className="font-mono text-xs text-muted">
                     <span className="sr-only">Lines </span>
                     {lineRange(c.start_line, c.end_line)}
                   </span>
                 </div>
-                <PlainText as="p" className="m-0 mt-1 text-bone" text={c.why_used_here} />
-                <dl className="m-0 mt-2 flex gap-4 font-mono text-xs text-muted">
+                <PlainText as="p" className="m-0 mt-1 break-words text-bone" text={c.why_used_here} />
+                <dl className="m-0 mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-muted">
                   <div>
                     <dt className="inline">Time </dt>
                     <dd className="m-0 inline">
@@ -173,16 +191,16 @@ export function L2Panel({ response }: L2PanelProps) {
       )}
 
       {chips.length > 0 && (
-        <section aria-labelledby="l2-blast">
+        <section aria-labelledby="l2-blast" className="min-w-0">
           <h3 id="l2-blast" className={HEADING}>
             Blast radius
           </h3>
-          <ul className="m-0 mt-1 flex list-none flex-wrap gap-2 p-0">
+          <ul className="m-0 mt-1 flex list-none flex-col gap-1.5 p-0">
             {chips.map((c, i) => {
               const target = index ? resolveTarget(index, c.id) : null;
               const symbol = target !== null && target.kind === 'symbol' ? target : null;
               return (
-                <li key={`${c.direction}-${c.id}-${i}`}>
+                <li key={`${c.direction}-${c.id}-${i}`} className="min-w-0">
                   <Chip
                     id={c.id}
                     direction={c.direction}

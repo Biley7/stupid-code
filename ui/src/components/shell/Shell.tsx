@@ -1,6 +1,7 @@
 // Application layout (Requirement 5). Landmarks in tab order: Command_Bar,
-// Specimen_Rail, Canvas, Autopsy_Slab. The regions below are minimal placeholders;
-// later tasks replace each with CommandBar, SpecimenRail, Canvas, and AutopsySlab.
+// Specimen_Rail, Canvas, Autopsy_Slab. The shell fills the viewport and never scrolls:
+// the Command_Bar stays fixed on top, and the three workspace columns each own their
+// scrollbar.
 import { CommandBar } from './CommandBar';
 import { SpecimenRail } from '../rail/SpecimenRail';
 import { Canvas } from '../canvas/Canvas';
@@ -9,10 +10,10 @@ import { AutopsySlab } from '../slab/AutopsySlab';
 
 export function Shell() {
   return (
-    <div className="flex h-full flex-col bg-obsidian text-bone">
+    <div className="flex h-screen w-screen flex-col overflow-hidden bg-obsidian text-bone">
       <CommandBar />
       <NoticeBar />
-      <div className="flex min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1 overflow-hidden">
         <SpecimenRail />
         <Canvas />
         <AutopsySlab />

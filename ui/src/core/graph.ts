@@ -181,3 +181,64 @@ export function highlightFor(
     impactScore: blast.impact_score,
   };
 }
+
+/** Upper bound on nodes rendered by the scoped Symbols graph. */
+export const MAX_SCOPED_NODES = 120;
+
+export interface ScopedModel {
+  model: GraphModel;
+  /** Nodes of the unscoped model. */
+  total: number;
+  /** Nodes kept after scoping and capping (equals `model.nodes.length`). */
+  shown: number;
+  /** True when the cap dropped nodes that belong to the scope. */
+  truncated: boolean;
+}
+
+/**
+ * Scopes a model to the nodes of one file plus their direct (1-hop) upstream and
+ * downstream neighbours, plus any `extraIds` that exist in the model (for example a
+ * blast-radius result). The selected file's own nodes are kept first, then neighbours
+ * in id order, so the cap is deterministic. Edges are kept when both ends survive.
+ * Pure: the input model is not modified and `computeCounters` is not touched.
+ */
+export function scopeModelToFile(
+  model: GraphModel,
+  filePath: string,
+  extraIds: readonly string[] = [],
+  cap: number = MAX_SCOPED_NODES,
+): ScopedModel {
+  const byId = new Map<string, GraphNodeModel>();
+  for (const n of model.nodes) byId.set(n.id, n);
+  const own = model.nodes.filter((n) => n.filePath === filePath).map((n) => n.id);
+  const neighbours = new Set<string>();
+  for (const id of own) {
+    for (const other of model.incoming.get(id) ?? []) neighbours.add(other);
+    for (const other of model.outgoing.get(id) ?? []) neighbours.add(other);
+  }
+  for (const id of extraIds) if (byId.has(id)) neighbours.add(id);
+  const ownSet = new Set(own);
+  const rest = [...neighbours].filter((id) => !ownSet.has(id) && byId.has(id)).sort(cmp);
+  const wanted = [...own, ...rest];
+  const kept = new Set(wanted.slice(0, Math.max(0, cap)));
+  const nodes = model.nodes.filter((n) => kept.has(n.id));
+  const edges = model.edges.filter((e) => kept.has(e.source) && kept.has(e.target));
+  const circularEdgeIds = new Set<string>();
+  const outgoing = new Map<string, string[]>();
+  const incoming = new Map<string, string[]>();
+  for (const e of edges) {
+    if (e.circular) circularEdgeIds.add(e.id);
+    const out = outgoing.get(e.source);
+    if (out === undefined) outgoing.set(e.source, [e.target]);
+    else out.push(e.target);
+    const inc = incoming.get(e.target);
+    if (inc === undefined) incoming.set(e.target, [e.source]);
+    else inc.push(e.source);
+  }
+  return {
+    model: { nodes, edges, circularEdgeIds, outgoing, incoming },
+    total: model.nodes.length,
+    shown: nodes.length,
+    truncated: wanted.length > kept.size,
+  };
+}

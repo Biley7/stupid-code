@@ -18,19 +18,19 @@ function NotApplicable() {
 
 export function L3Panel({ l3 }: L3PanelProps) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex min-w-0 flex-col gap-4">
       <section aria-labelledby="l3-pattern">
         <h3 id="l3-pattern" className="m-0 text-xs font-semibold uppercase text-muted">
           Topology pattern
         </h3>
-        <PlainText as="p" className="m-0 mt-1 font-mono text-bone" text={l3.topology_pattern} />
+        <PlainText as="p" className="m-0 mt-1 break-words font-semibold text-bone" text={l3.topology_pattern} />
       </section>
 
       <section aria-labelledby="l3-why">
         <h3 id="l3-why" className="m-0 text-xs font-semibold uppercase text-muted">
           Why this folder structure
         </h3>
-        <PlainText as="p" className="m-0 mt-1 text-bone" text={l3.why_this_folder_structure} />
+        <PlainText as="p" className="m-0 mt-1 break-words text-bone" text={l3.why_this_folder_structure} />
       </section>
 
       <section aria-labelledby="l3-evidence">
@@ -39,8 +39,8 @@ export function L3Panel({ l3 }: L3PanelProps) {
         </h3>
         <ul className="m-0 mt-1 flex list-none flex-col gap-1 p-0">
           {l3.structural_evidence.map((e, i) => (
-            <li key={i} className="border border-hairline p-2">
-              <PlainText className="font-mono text-bone" text={e} />
+            <li key={i} className="min-w-0 border border-hairline p-2">
+              <PlainText className="break-words text-bone" text={e} />
             </li>
           ))}
         </ul>
@@ -74,7 +74,7 @@ export function L3Panel({ l3 }: L3PanelProps) {
               <tbody>
                 <tr>
                   <th scope="row" className="border border-hairline p-2 align-top font-normal text-bone">
-                    <PlainText className="font-mono" text={l3.topology_pattern} />{' '}
+                    <PlainText className="break-words" text={l3.topology_pattern} />{' '}
                     <span className="border border-hairline px-1 text-xs font-semibold uppercase text-bone">
                       Selected
                     </span>
@@ -89,7 +89,7 @@ export function L3Panel({ l3 }: L3PanelProps) {
                 {l3.alternatives.map((a, i) => (
                   <tr key={i}>
                     <th scope="row" className="border border-hairline p-2 align-top font-normal text-bone">
-                      <PlainText className="font-mono" text={a.pattern_name} />
+                      <PlainText className="break-words" text={a.pattern_name} />
                     </th>
                     <td className="border border-hairline p-2 align-top text-bone">
                       <PlainText text={a.why_not_chosen} />

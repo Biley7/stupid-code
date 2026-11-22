@@ -10,7 +10,7 @@ import { buildFileTree, ancestorsOf, flattenVisible, type TreeRow } from '../../
 import { buildSnapshotIndex, resolveTarget, type SnapshotIndex } from '../../core/snapshotIndex';
 import { useSnapshot } from '../../data/useSnapshot';
 import { useAppDispatch, useAppState, useDataState } from '../../state/store';
-import { MasteryBadge } from '../shared/MasteryBadge';
+import { MasteryDot } from '../shared/MasteryDot';
 import { PlainText } from '../shared/PlainText';
 import { StateBlock } from '../shared/StateBlock';
 
@@ -258,16 +258,20 @@ function TreeView({ files, index }: TreeViewProps) {
         }}
         onFocus={() => setFocusKey(key)}
         onKeyDown={(e) => onKeyDown(e, row, i)}
-        style={{ ...style, paddingLeft: 8 + row.depth * 14 }}
-        className={`flex cursor-pointer items-center gap-2 pr-2 text-sm ${
-          selected ? 'bg-surface text-bone' : 'text-bone'
+        style={{ ...style, paddingLeft: 6 + row.depth * 12 }}
+        className={`flex cursor-pointer items-center gap-1.5 border-l-2 pr-2 text-sm hover:bg-obsidian ${
+          selected ? 'border-bone bg-obsidian text-bone' : 'border-transparent text-bone'
         }`}
       >
         {row.kind === 'symbol' ? (
           <>
             <span className="w-3 shrink-0" aria-hidden="true" />
-            <PlainText text={row.qualname} className="truncate font-mono" title={row.qualname} />
-            <PlainText text={row.symbolKind} className="shrink-0 font-mono text-xs text-muted" />
+            <PlainText
+              text={row.qualname}
+              className="min-w-0 flex-1 truncate font-mono text-[13px]"
+              title={row.qualname}
+            />
+            <PlainText text={row.symbolKind} className="shrink-0 text-[11px] text-muted" />
           </>
         ) : (
           <>
@@ -280,23 +284,22 @@ function TreeView({ files, index }: TreeViewProps) {
                 )
               ) : null}
             </span>
-            <PlainText text={row.name} className="truncate font-mono" title={row.path} />
             {row.kind === 'file' ? (
-              <>
-                <PlainText
-                  text={row.language}
-                  className="shrink-0 border border-hairline px-1 font-mono text-xs text-muted"
-                />
-                {row.parseErrors ? (
-                  <span className="shrink-0 border border-crimson px-1 font-mono text-xs text-signal">
-                    PARSE ERRORS
-                  </span>
-                ) : null}
-                <MasteryBadge
-                  presentation={fileMasteryView(vitals, row.path)}
-                  className="ml-auto shrink-0"
-                />
-              </>
+              <MasteryDot presentation={fileMasteryView(vitals, row.path)} />
+            ) : null}
+            <PlainText
+              text={row.name}
+              className="min-w-0 flex-1 truncate font-mono text-[13px]"
+              title={row.kind === 'file' ? `${row.path} (${row.language})` : row.path}
+            />
+            {row.kind === 'file' && row.parseErrors ? (
+              <span
+                title="Parse errors"
+                className="shrink-0 text-[11px] font-bold leading-none text-signal"
+              >
+                <span aria-hidden="true">!</span>
+                <span className="sr-only">PARSE ERRORS</span>
+              </span>
             ) : null}
           </>
         )}
@@ -310,7 +313,7 @@ function TreeView({ files, index }: TreeViewProps) {
       role="tree"
       aria-label="Repository file tree"
       onScroll={onScroll}
-      className="max-h-full overflow-auto"
+      className={virtual ? 'max-h-[60vh] overflow-auto' : 'overflow-x-hidden'}
       style={{ position: 'relative' }}
     >
       <div

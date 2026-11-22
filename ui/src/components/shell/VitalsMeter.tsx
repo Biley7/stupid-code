@@ -36,38 +36,55 @@ export function VitalsMeter() {
       announce = 'No modules to measure';
     } else {
       announce = `${v.mastery_percentage} percent mastered, ${v.mastered_count} of ${v.total_modules} modules`;
+      const pct = (n: number): string => `${Math.max(0, Math.min(100, (n / v.total_modules) * 100))}%`;
       body = (
-        <dl className="m-0 flex items-center gap-3 font-mono text-xs">
-          <div className="flex gap-1">
-            <dt className="text-muted">Modules</dt>
-            <dd className="m-0 text-bone">{v.total_modules}</dd>
+        <div className="flex min-w-0 flex-col gap-1">
+          <div
+            role="progressbar"
+            aria-label="Mastery progress"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={v.mastery_percentage}
+            aria-valuetext={`${v.mastery_percentage}% mastered`}
+            className="flex h-2 w-full overflow-hidden border border-hairline bg-obsidian"
+          >
+            <span className="h-full bg-verified" style={{ width: pct(v.mastered_count) }} />
+            <span className="h-full bg-stale" style={{ width: pct(v.stale_count) }} />
+            <span className="h-full bg-muted" style={{ width: pct(v.dissected_count) }} />
+            <span className="h-full bg-crimson" style={{ width: pct(v.unaudited_count) }} />
           </div>
-          <div className="flex gap-1">
-            <dt className="text-muted">Unaudited</dt>
-            <dd className="m-0 text-signal">{v.unaudited_count}</dd>
-          </div>
-          <div className="flex gap-1">
-            <dt className="text-muted">Dissected</dt>
-            <dd className="m-0 text-bone">{v.dissected_count}</dd>
-          </div>
-          <div className="flex gap-1">
-            <dt className="text-muted">Mastered</dt>
-            <dd className="m-0 text-verified">{v.mastered_count}</dd>
-          </div>
-          <div className="flex gap-1">
-            <dt className="text-muted">Stale</dt>
-            <dd className="m-0 text-stale">{v.stale_count}</dd>
-          </div>
-          <div className="flex gap-1">
-            <dt className="text-muted">Mastery</dt>
-            <dd className="m-0 text-bone">{v.mastery_percentage}%</dd>
-          </div>
-        </dl>
+          <dl className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-[11px] tabular-nums">
+            <div className="flex gap-1">
+              <dt className="text-muted">Modules</dt>
+              <dd className="m-0 text-bone">{v.total_modules}</dd>
+            </div>
+            <div className="flex items-center gap-1">
+              <dt className="text-muted">Unaudited</dt>
+              <dd className="m-0 text-signal">{v.unaudited_count}</dd>
+            </div>
+            <div className="flex gap-1">
+              <dt className="text-muted">Dissected</dt>
+              <dd className="m-0 text-bone">{v.dissected_count}</dd>
+            </div>
+            <div className="flex gap-1">
+              <dt className="text-muted">Mastered</dt>
+              <dd className="m-0 text-verified">{v.mastered_count}</dd>
+            </div>
+            <div className="flex gap-1">
+              <dt className="text-muted">Stale</dt>
+              <dd className="m-0 text-stale">{v.stale_count}</dd>
+            </div>
+            <div className="ml-auto flex gap-1 font-semibold">
+              <dt className="text-muted">Mastery</dt>
+              <dd className="m-0 text-bone">{v.mastery_percentage}%</dd>
+            </div>
+          </dl>
+        </div>
       );
       if (vitals.refreshFailed) {
         body = (
           <div className="flex items-center gap-2">
-            {body}
+            <div className="min-w-0 flex-1">{body}</div>
             <span role="status" className="text-xs text-stale">
               Out of date
             </span>

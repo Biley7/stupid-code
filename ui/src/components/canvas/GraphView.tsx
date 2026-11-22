@@ -3,6 +3,7 @@
 // the backend for blast radius; the snapshot retry reuses useSnapshot.reload.
 import '@xyflow/react/dist/style.css';
 import {
+  Controls,
   MarkerType,
   ReactFlow,
   type Edge,
@@ -13,7 +14,15 @@ import {
 import { useCallback, useMemo, useRef, useState } from 'react';
 import type { BlastRadius, FileAnalysis, Lens, RepoGraphSnapshot } from '../../api/types';
 import { computeCounters } from '../../core/counters';
-import { buildGraphModel, highlightFor, type GraphModel, type Highlight, type Layer } from '../../core/graph';
+import {
+  buildGraphModel,
+  highlightFor,
+  scopeModelToFile,
+  type GraphModel,
+  type Highlight,
+  type Layer,
+  type ScopedModel,
+} from '../../core/graph';
 import { layoutGraph, NODE_HEIGHT, NODE_WIDTH, type LayoutResult } from '../../core/layout';
 import {
   fileMasteryView,
@@ -41,27 +50,23 @@ const LAYERS: readonly { id: Layer; label: string }[] = [
 const nodeTypes: NodeTypes = { file: FileNode, symbol: SymbolNode };
 const edgeTypes: EdgeTypes = { circular: CircularEdge };
 
-// Model and layout depend only on the snapshot and the layer (Requirements 15.7, 29.7).
-interface LayerBuild {
-  model: GraphModel;
-  layout: LayoutResult;
-}
-const layerCache = new WeakMap<RepoGraphSnapshot, Partial<Record<Layer, LayerBuild>>>();
-function layerBuild(snapshot: RepoGraphSnapshot, layer: Layer): LayerBuild {
-  let perLayer = layerCache.get(snapshot);
+// The full model depends only on the snapshot and the layer (Requirements 15.7, 29.7).
+// Layout runs on the model that is displayed: the whole Files graph, or the scoped
+// Symbols graph, so a repository with thousands of symbols is never laid out at once.
+const modelCache = new WeakMap<RepoGraphSnapshot, Partial<Record<Layer, GraphModel>>>();
+function layerModel(snapshot: RepoGraphSnapshot, layer: Layer): GraphModel {
+  let perLayer = modelCache.get(snapshot);
   if (perLayer === undefined) {
     perLayer = {};
-    layerCache.set(snapshot, perLayer);
+    modelCache.set(snapshot, perLayer);
   }
   let hit = perLayer[layer];
   if (hit === undefined) {
-    const model = buildGraphModel(snapshot, layer);
-    hit = { model, layout: layoutGraph(model) };
+    hit = buildGraphModel(snapshot, layer);
     perLayer[layer] = hit;
   }
   return hit;
 }
-
 /** File path to mastery presentation, rebuilt only when the vitals value changes. */
 function buildMasteryLookup(files: readonly FileAnalysis[], vitals: VitalsRemote) {
   computeCounters.masteryLookup += 1;
@@ -104,7 +109,6 @@ function sameData(a: GraphNodeData, b: GraphNodeData): boolean {
 }
 
 interface GraphCanvasProps {
-  snapshot: RepoGraphSnapshot;
   layer: Layer;
   model: GraphModel;
   layout: LayoutResult;
@@ -173,6 +177,7 @@ function GraphCanvas({
     return out;
   }, [model, layout, mastery, unknown, highlight, visualMode, layer, hasSelection, onSelect, onClear]);
 
+  const autopsy = visualMode === 'Autopsy';
   const edges = useMemo<(Edge | CircularFlowEdge)[]>(
     () =>
       model.edges.map((e) => {
@@ -190,23 +195,25 @@ function GraphCanvas({
             focusable: false,
           } satisfies CircularFlowEdge;
         }
+        // Blast Radius edges of the selected node are lit; unrelated edges recede.
+        const lit = incident ? (autopsy ? 'var(--color-signal)' : 'var(--color-bone)') : 'var(--color-muted)';
         return {
           id: e.id,
           source: e.source,
           target: e.target,
           type: 'smoothstep',
-          markerEnd: { ...marker, color: incident ? 'var(--color-bone)' : 'var(--color-muted)' },
+          markerEnd: { ...marker, color: lit },
           style: {
-            stroke: incident ? 'var(--color-bone)' : 'var(--color-muted)',
-            strokeWidth: incident ? 1.5 : 1,
-            opacity: dimmed ? 0.35 : 1,
+            stroke: lit,
+            strokeWidth: incident ? 2 : 1,
+            opacity: dimmed ? (autopsy ? 0.12 : 0.35) : 1,
           },
+          zIndex: incident ? 10 : 0,
           focusable: false,
         } satisfies Edge;
       }),
-    [model, highlight.selected, hasSelection],
+    [model, highlight.selected, hasSelection, autopsy],
   );
-
   const onNodeClick = useCallback<NodeMouseHandler>((_event, node) => onSelect(node.id), [onSelect]);
 
   return (
@@ -225,38 +232,82 @@ function GraphCanvas({
       onlyRenderVisibleElements={model.nodes.length > VISIBLE_ONLY_THRESHOLD}
       minZoom={0.05}
       fitView
+      fitViewOptions={{ padding: 0.2, maxZoom: 1.25 }}
       style={{ background: 'transparent' }}
-    />
+    >
+      <Controls showInteractive={false} position="bottom-left" fitViewOptions={{ padding: 0.2, maxZoom: 1.25 }} />
+    </ReactFlow>
   );
+}
+
+const EMPTY_MODEL: GraphModel = {
+  nodes: [],
+  edges: [],
+  circularEdgeIds: new Set(),
+  outgoing: new Map(),
+  incoming: new Map(),
+};
+const NO_IDS: readonly string[] = [];
+
+/** Keeps the previous scope object while the kept node ids are unchanged, so layout stays memoized. */
+function useStableScope(next: ScopedModel | null): ScopedModel | null {
+  const ref = useRef<ScopedModel | null>(null);
+  const prev = ref.current;
+  if (
+    prev !== null &&
+    next !== null &&
+    prev.total === next.total &&
+    prev.truncated === next.truncated &&
+    prev.model.nodes.length === next.model.nodes.length &&
+    prev.model.edges.length === next.model.edges.length &&
+    prev.model.nodes.every((n, i) => n.id === next.model.nodes[i]?.id)
+  ) {
+    return prev;
+  }
+  ref.current = next;
+  return next;
 }
 
 export function GraphView() {
   const data = useDataState();
-  const { repoId, symbol, node, visualMode } = useAppState();
+  const { repoId, file, symbol, node, visualMode } = useAppState();
   const dispatch = useAppDispatch();
   const { snapshot, reload } = useSnapshot({ autoload: false });
   const [layer, setLayer] = useState<Layer>('files');
-
   const snap = snapshot.status === 'ready' ? snapshot.data.snapshot : null;
   const vitals = data.vitals;
-
-  const build = useMemo(() => (snap === null ? null : layerBuild(snap, layer)), [snap, layer]);
+  const fullModel = useMemo(() => (snap === null ? null : layerModel(snap, layer)), [snap, layer]);
   const mastery = useMemo(
     () => (snap === null ? new Map<string, MasteryPresentation>() : buildMasteryLookup(snap.files, vitals)),
     [snap, vitals],
   );
   const index = useMemo(() => (snap === null ? null : buildSnapshotIndex(snap)), [snap]);
-
   const blast = selectBlastRadius(data, repoId, symbol);
-  const selectedId = build !== null && node !== null ? node : null;
+  // Symbols layer: only the selected file's symbols and their 1-hop neighbours are drawn.
+  const blastIds = useMemo(
+    () => (blast === undefined ? NO_IDS : [...blast.upstream_callers, ...blast.downstream_callees]),
+    [blast],
+  );
+  const scopedNext = useMemo(
+    () =>
+      layer === 'symbols' && fullModel !== null && file !== null
+        ? scopeModelToFile(fullModel, file, blastIds)
+        : null,
+    [layer, fullModel, file, blastIds],
+  );
+  const scoped = useStableScope(scopedNext);
+  const needsFile = layer === 'symbols' && file === null;
+  const model: GraphModel | null =
+    fullModel === null ? null : layer === 'symbols' ? (scoped?.model ?? EMPTY_MODEL) : fullModel;
+  const layout = useMemo(() => (model === null ? null : layoutGraph(model)), [model]);
+  const selectedId = model !== null && node !== null ? node : null;
   const highlight = useMemo(
     () =>
-      build === null
-        ? highlightFor({ nodes: [], edges: [], circularEdgeIds: new Set(), outgoing: new Map(), incoming: new Map() }, null)
-        : highlightFor(build.model, selectedId, selectedId !== null && selectedId === symbol ? blast : undefined),
-    [build, selectedId, symbol, blast],
+      model === null
+        ? highlightFor(EMPTY_MODEL, null)
+        : highlightFor(model, selectedId, selectedId !== null && selectedId === symbol ? blast : undefined),
+    [model, selectedId, symbol, blast],
   );
-
   const onSelect = useCallback(
     (id: string) => {
       if (index === null) return;
@@ -266,15 +317,13 @@ export function GraphView() {
     [index, dispatch],
   );
   const onClear = useCallback(() => dispatch({ type: 'node-cleared' }), [dispatch]);
-
   const changeLayer = (next: Layer) => {
     if (next === layer || snap === null) return;
-    const nextBuild = layerBuild(snap, next);
-    const keep = node !== null && nextBuild.model.nodes.some((n) => n.id === node);
+    const nextModel = layerModel(snap, next);
+    const keep = node !== null && nextModel.nodes.some((n) => n.id === node);
     setLayer(next);
     dispatch({ type: 'layer-changed', keepNode: keep });
   };
-
   if (repoId === null) return <StateBlock variant="empty" label="No repository selected." />;
   if (snapshot.status === 'idle' || snapshot.status === 'loading') {
     return <StateBlock variant="loading" label="Loading graph…" />;
@@ -291,20 +340,21 @@ export function GraphView() {
       />
     );
   }
-  if (build === null) return null;
-
+  if (fullModel === null || model === null || layout === null) return null;
   const layerLabel = layer === 'files' ? 'Files' : 'Symbols';
-  const inCount = selectedId === null ? 0 : (build.model.incoming.get(selectedId)?.length ?? 0);
-  const outCount = selectedId === null ? 0 : (build.model.outgoing.get(selectedId)?.length ?? 0);
+  const inCount = selectedId === null ? 0 : (model.incoming.get(selectedId)?.length ?? 0);
+  const outCount = selectedId === null ? 0 : (model.outgoing.get(selectedId)?.length ?? 0);
   const textAlternative =
     selectedId === null
       ? 'Nothing is selected.'
       : `Selected ${selectedId}. Incoming edges: ${inCount}. Outgoing edges: ${outCount}.` +
         (inCount === 0 && outCount === 0 ? ' No upstream or downstream nodes.' : '');
-
+  const number = new Intl.NumberFormat('en-US');
+  // Remount (and so refit the viewport) when the repository, layer, or scoped file changes.
+  const canvasKey = `${repoId}|${layer}|${layer === 'symbols' ? (file ?? '') : ''}`;
   return (
     <section aria-label="Dependency graph" className="flex h-full min-h-0 flex-col">
-      <div className="flex items-center gap-3 border-b border-hairline bg-surface px-2 py-1">
+      <div className="flex flex-wrap items-center gap-3 border-b border-hairline bg-surface px-2 py-1">
         <div role="group" aria-label="Graph layer" className="flex gap-1">
           {LAYERS.map((l) => (
             <button
@@ -312,16 +362,26 @@ export function GraphView() {
               type="button"
               aria-pressed={layer === l.id}
               onClick={() => changeLayer(l.id)}
-              className={`border px-2 py-0.5 font-mono text-xs ${
-                layer === l.id ? 'border-bone text-bone' : 'border-hairline text-muted'
+              className={`border px-2.5 py-0.5 text-xs font-medium ${
+                layer === l.id ? 'border-bone bg-obsidian text-bone' : 'border-hairline text-muted hover:text-bone'
               }`}
             >
               {l.label}
             </button>
           ))}
         </div>
+        {layer === 'symbols' && scoped !== null ? (
+          <span
+            data-testid="scope-badge"
+            title="The Symbols graph shows the selected file's symbols and their direct callers and callees."
+            className="border border-hairline px-1.5 py-0.5 text-[11px] tabular-nums text-muted"
+          >
+            Scoped: {number.format(scoped.shown)} of {number.format(scoped.total)} symbols
+            {scoped.truncated ? ' (capped)' : ''}
+          </span>
+        ) : null}
         {highlight.selected !== null ? (
-          <p className="m-0 font-mono text-xs text-muted">
+          <p className="m-0 min-w-0 text-xs text-muted">
             {highlight.source === 'blast_radius'
               ? 'blast radius from blast-radius result'
               : 'highlighting derived from snapshot'}
@@ -334,16 +394,20 @@ export function GraphView() {
       <p role="status" className="sr-only">
         <PlainText text={textAlternative} />
       </p>
-      {build.model.nodes.length === 0 ? (
+      {needsFile ? (
+        <StateBlock
+          variant="empty"
+          label={`Select a file to scope the Symbols graph (${number.format(fullModel.nodes.length)} symbols in this repository).`}
+        />
+      ) : model.nodes.length === 0 ? (
         <StateBlock variant="empty" label={`The ${layerLabel} layer has no nodes.`} />
       ) : (
         <div className="canvas-grid min-h-0 flex-1" data-layer={layer}>
           <GraphCanvas
-            key={`${layer}`}
-            snapshot={snap as RepoGraphSnapshot}
+            key={canvasKey}
             layer={layer}
-            model={build.model}
-            layout={build.layout}
+            model={model}
+            layout={layout}
             mastery={mastery}
             highlight={highlight}
             visualMode={visualMode}

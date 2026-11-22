@@ -1,4 +1,5 @@
 import { ApiProvider } from './api/context';
+import { AutoSelectRepo } from './components/shell/AutoSelectRepo';
 import { DataLoader } from './components/shell/DataLoader';
 import { DeepLinkController } from './components/shell/DeepLinkController';
 import { NoticeProvider } from './components/shell/NoticeBar';
@@ -12,6 +13,7 @@ export default function App() {
         <NoticeProvider>
           <DataLoader />
           <DeepLinkController />
+          <AutoSelectRepo />
           <Shell />
         </NoticeProvider>
       </StoreProvider>

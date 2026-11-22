@@ -48,7 +48,7 @@ function CircularEdgeImpl({
             transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
             opacity: dimmed ? 0.35 : 1,
           }}
-          className="pointer-events-none border border-crimson bg-obsidian px-1 font-mono text-[10px] text-signal"
+          className="pointer-events-none border border-crimson bg-obsidian px-1 text-[10px] font-semibold tracking-wide text-signal"
         >
           CIRCULAR
         </span>
