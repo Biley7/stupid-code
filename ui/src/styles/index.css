@@ -1,0 +1,89 @@
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #app-root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-obsidian);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+  }
+
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--font-mono);
+  }
+
+  /* Visible focus indicator for every interactive element, in both modes. */
+  :focus-visible {
+    outline: 2px solid var(--color-bone);
+    outline-offset: 2px;
+  }
+}
+
+/* Autopsy-only decoration. Lab mode defines none of these rules. */
+
+/* Coordinate grid: two hairline gradients on the Canvas container. */
+[data-visual-mode='autopsy'] .canvas-grid {
+  position: relative;
+  background-image:
+    linear-gradient(to right, var(--color-hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-hairline) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Shroud: static scanline texture over UNAUDITED nodes. No blur, no halo. */
+[data-visual-mode='autopsy'] .node-unaudited {
+  position: relative;
+}
+
+[data-visual-mode='autopsy'] .node-unaudited::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.25;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--color-hairline) 0,
+    var(--color-hairline) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  transition: opacity 200ms linear;
+}
+
+/* Fracture pulse: stroke opacity toggle on circular edges. No blur. */
+@keyframes fracture-pulse {
+  0%,
+  100% {
+    stroke-opacity: 1;
+  }
+  50% {
+    stroke-opacity: 0.4;
+  }
+}
+
+[data-visual-mode='autopsy'] .edge-circular {
+  animation: fracture-pulse 1.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,17 @@
+/* Single source of color tokens. Tailwind theme.colors maps to these variables. */
+:root {
+  --color-obsidian: #09090b;
+  --color-surface: #111113;
+  --color-bone: #f4f4f5;
+  --color-muted: #a1a1aa;
+  --color-hairline: #27272a;
+  --color-crimson: #dc2626;
+  --color-signal: #ef4444;
+  --color-verified: #10b981;
+  /* Used only by the STALE mastery presentation. */
+  --color-stale: #f59e0b;
+
+  /* System font stacks only. No external font host. */
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
